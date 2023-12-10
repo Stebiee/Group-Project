@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
- * Creates a Huffman tree and allows for decoding and returning the codes
+ * Creates a Huffman tree and allows for encoding and decoding of files. 
  * @since 11-27-2023
  * @author Terry Ton, Esteban Madrigal , Manvir Hansra, Kushaan Naskar, Vinh Tran 
  */
@@ -22,9 +22,8 @@ public class HuffmanTree implements Serializable {
     private Map<Character, String> huffmanCodes = new HashMap<>();
 
     /**
-    * frequency is the occurrence of a character in list
-    * parent nodes store the sum of frequency of children
-    */
+     * This class is a node in the HuffmanTree. 
+     */
     public class Node implements Serializable, Comparable<Node>{
         private static final long serialVersionUID = 1L;
         private Node left;
@@ -32,23 +31,29 @@ public class HuffmanTree implements Serializable {
         private int frequency;
         
         /**
-         * updates frequency to be sum between left and right nodes
-         * @param leftNode
-         * @param rightNode
+         * Creates a new node with the given left and right children.
+         * @param leftNode Left child.
+         * @param rightNode Right child. 
          */
         public Node(Node leftNode, Node rightNode) {
             this.left = leftNode;
             this.right = rightNode;
             this.frequency = leftNode.frequency + rightNode.frequency;
         }
-    
+
+        /**
+         * Creates a new node with a given frequency.
+         * @param frequency The frequency of the node.
+         */        
         public Node(int frequency) {
             this.frequency = frequency;
         }
         
         /**
-         * @param node
-         * @return whether this.frequency is larger than node.frequency
+         * Compares this node with the input node.
+         * @param node The input node to be compared with. 
+         * @return Verifies if this node is less than, greater than or equal to the input node and 
+         * 		   accordingly returns an integer that is negative, positive or zero respectively. 
          */
         @Override
         public int compareTo(Node node) {
@@ -56,10 +61,18 @@ public class HuffmanTree implements Serializable {
         }
     }
 
+    /**
+     * This implements the Leaf class in the Huffman Tree. 
+     */    
     public class Leaf extends Node {
         private static final long serialVersionUID = 1L;
         private final char CHARACTER;
-    
+ 
+        /**
+         * Creates a Leaf node with a given character and frequency.
+         * @param character Character for this leaf node. 
+         * @param frequency Frequency of the character.
+         */
         public Leaf(char character, int frequency) {
             super(frequency);
             this.CHARACTER = character;
@@ -67,16 +80,18 @@ public class HuffmanTree implements Serializable {
     }
 
     /**
-     * Call the the encode method to create the HuffmanTree
+     * Create a HuffmanTree from a given input file. 
+     * @param inputFile The input file.
+     * @throws IOException An exception is thrown if an I/O error occurs.
      */
-
     public HuffmanTree(File inputFile) throws IOException{
         this.file = inputFile;
         encode();
     }
 
     /**
-     * Keep counts of characters and their frequencies in the text
+     * Gets the frequency of each character in the file. 
+     * @throws IOException An exception is thrown if an I/O error occurs.
      */
     private void getCharFrequencies() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -95,8 +110,8 @@ public class HuffmanTree implements Serializable {
 
     /**
      * Encode the data into a Huffman Tree
+     * @throws IOException An exception is thrown if an I/O error occurs.
      */
-
     private void encode() throws IOException {
         getCharFrequencies();
         charFrequencies.put(EOF, 1);
@@ -135,9 +150,9 @@ public class HuffmanTree implements Serializable {
     }     
 
     /**
-     * Generate the HuffmanCodes tree from the given string 
-     * @param node The current node
-     * @param code The text which need to be added
+     * Generates the Huffman Codes by traversing the tree. 
+     * @param node The current node.
+     * @param code The Huffman code.
      */
     private void generateHuffmanCodes(Node node, String code) {
         if (node instanceof Leaf) {
@@ -149,7 +164,8 @@ public class HuffmanTree implements Serializable {
     }
 
     /**
-     * HuffmanCodes getter
+     * Gets a map of the Huffman Codes.
+     * @return Returns a map of the Huffman codes.
      */
     public Map<Character, String> getHuffmanCodes() {
         return huffmanCodes;
